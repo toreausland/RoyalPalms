@@ -102,6 +102,19 @@
     </div>
 </div>
 
+<!-- Database-backup -->
+<div class="card shadow-sm mb-4 border-success">
+    <div class="card-body d-flex align-items-center justify-content-between">
+        <div>
+            <h6 class="mb-1"><i class="bi bi-shield-check text-success me-2"></i>Database-backup</h6>
+            <small class="text-muted">Last ned en komplett kopi av databasen (brukere, temaer, kommentarer, dokumenter).</small>
+        </div>
+        <a href="{{ url_for('admin.download_backup') }}" class="btn btn-outline-success">
+            <i class="bi bi-download me-1"></i>Last ned backup
+        </a>
+    </div>
+</div>
+
 <!-- Temaer med redigeringsmuligheter -->
 <div class="card shadow-sm mb-4">
     <div class="card-header bg-royal text-white">

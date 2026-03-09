@@ -1,10 +1,12 @@
 import os
 from flask import Flask
 from flask_login import LoginManager
+from flask_migrate import Migrate
 from flask_wtf.csrf import CSRFProtect
 from models import db, User
 
 login_manager = LoginManager()
+migrate = Migrate()
 csrf = CSRFProtect()
 
 
@@ -27,6 +29,7 @@ def create_app(config_name=None):
         pass  # Under Render build er /var/data read-only — opprettes ved runtime
 
     db.init_app(app)
+    migrate.init_app(app, db)
     csrf.init_app(app)
     login_manager.init_app(app)
     login_manager.login_view = 'auth.login'
@@ -51,8 +54,8 @@ def create_app(config_name=None):
     app.register_blueprint(documents_bp, url_prefix='/dokumenter')
     app.register_blueprint(profile_bp, url_prefix='/profil')
 
-    with app.app_context():
-        db.create_all()
+    # db.create_all() er fjernet — Flask-Migrate håndterer skjemaendringer.
+    # Bruk 'flask db upgrade' for å opprette/oppdatere tabeller.
 
     return app
 

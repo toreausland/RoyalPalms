@@ -1,6 +1,9 @@
 import csv
 import io
-from flask import Blueprint, render_template, redirect, url_for, flash, Response, request
+import os
+import shutil
+from datetime import datetime
+from flask import Blueprint, render_template, redirect, url_for, flash, Response, request, send_file, current_app
 from flask_login import login_required, current_user
 from functools import wraps
 from models import db, User, Topic, Comment, Document, ActivityLog
@@ -182,6 +185,50 @@ def reject_member(user_id):
 
     flash(f'Registreringen til {name} er avvist og kontoen fjernet.', 'info')
     return redirect(url_for('admin.panel'))
+
+
+@admin_bp.route('/backup')
+@login_required
+@admin_required
+def download_backup():
+    """Last ned backup av databasen som .db-fil."""
+    db_uri = current_app.config['SQLALCHEMY_DATABASE_URI']
+    if not db_uri.startswith('sqlite:///'):
+        flash('Backup støttes kun for SQLite-databaser.', 'danger')
+        return redirect(url_for('admin.panel'))
+
+    db_path = db_uri.replace('sqlite:///', '')
+    if not os.path.exists(db_path):
+        flash('Databasefilen ble ikke funnet.', 'danger')
+        return redirect(url_for('admin.panel'))
+
+    # Kopier til temp-fil for trygg nedlasting
+    timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+    backup_filename = f'royal_palms_backup_{timestamp}.db'
+    backup_path = os.path.join(os.path.dirname(db_path), backup_filename)
+    shutil.copy2(db_path, backup_path)
+
+    log = ActivityLog(
+        action='backup',
+        description=f'{current_user.name} lastet ned database-backup',
+        user_id=current_user.id,
+    )
+    db.session.add(log)
+    db.session.commit()
+
+    response = send_file(
+        backup_path,
+        as_attachment=True,
+        download_name=backup_filename,
+    )
+
+    # Slett temp-filen etter sending
+    @response.call_on_close
+    def cleanup():
+        if os.path.exists(backup_path):
+            os.remove(backup_path)
+
+    return response
 
 
 @admin_bp.route('/tema/nytt', methods=['GET', 'POST'])

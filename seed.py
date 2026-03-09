@@ -3,7 +3,9 @@ from models import db, User, Topic
 
 
 def seed():
-    app = create_app('development')
+    import os
+    env = os.environ.get('FLASK_ENV', 'development')
+    app = create_app(env)
     with app.app_context():
         db.create_all()
 

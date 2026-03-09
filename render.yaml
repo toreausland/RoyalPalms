@@ -1,9 +1,14 @@
 services:
   - type: web
-    name: royal-palms-kjopergruppe
+    name: royalpalms-kjopergruppe
     runtime: python
     buildCommand: "./build.sh"
     startCommand: "gunicorn app:app"
+    region: frankfurt
+    disk:
+      name: royal-palms-data
+      mountPath: /var/data
+      sizeGB: 1
     envVars:
       - key: FLASK_ENV
         value: production
@@ -11,3 +16,5 @@ services:
         generateValue: true
       - key: PYTHON_VERSION
         value: "3.11.7"
+      - key: PERSISTENT_DIR
+        value: /var/data

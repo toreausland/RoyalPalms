@@ -21,3 +21,10 @@ class DevelopmentConfig(Config):
 
 class ProductionConfig(Config):
     DEBUG = False
+    # Persistent disk på Render — data overlever redeploy
+    PERSISTENT_DIR = os.environ.get('PERSISTENT_DIR', '/var/data')
+    SQLALCHEMY_DATABASE_URI = os.environ.get(
+        'DATABASE_URL',
+        'sqlite:///' + os.path.join(PERSISTENT_DIR, 'royal_palms.db')
+    )
+    UPLOAD_FOLDER = os.path.join(PERSISTENT_DIR, 'uploads')

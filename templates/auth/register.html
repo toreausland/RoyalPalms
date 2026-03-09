@@ -66,6 +66,33 @@
                         <div class="invalid-feedback">{{ error }}</div>
                         {% endfor %}
                     </div>
+
+                    <!-- Erklæring -->
+                    <div class="card bg-light border-royal mb-3">
+                        <div class="card-body py-3">
+                            <p class="small mb-2"><strong><i class="bi bi-shield-check me-1"></i>Erklæring</strong></p>
+                            <p class="small text-muted mb-2" style="line-height: 1.5;">
+                                Ved å registrere meg bekrefter jeg at jeg er kjøper i Royal Palms,
+                                Mijas Costa, og ønsker å stå sammen med øvrige kjøpere for å
+                                ivareta våre felles interesser overfor utbygger — inntil sameiene
+                                er formelt etablert og har overtatt denne rollen.
+                            </p>
+                            <div class="form-check">
+                                {{ form.agreement(class="form-check-input" + (" is-invalid" if form.agreement.errors else "")) }}
+                                {{ form.agreement.label(class="form-check-label small") }}
+                                {% for error in form.agreement.errors %}
+                                <div class="invalid-feedback">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-info small mb-3">
+                        <i class="bi bi-info-circle me-1"></i>
+                        Etter registrering må kontoen din godkjennes av en administrator
+                        før du får tilgang. Dette er for å beskytte gruppen mot uvedkommende.
+                    </div>
+
                     <div class="d-grid">
                         {{ form.submit(class="btn btn-royal btn-lg") }}
                     </div>

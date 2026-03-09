@@ -25,6 +25,7 @@ class RegistrationForm(FlaskForm):
     apartment = StringField('Leilighet (f.eks. Tiger Palm A1)', validators=[DataRequired(), Length(max=50)])
     phase = SelectField('Fase', choices=PHASE_CHOICES, validators=[DataRequired()])
     phone = StringField('Telefon (valgfritt)', validators=[Optional(), Length(max=30)])
+    agreement = BooleanField('Jeg bekrefter erklæringen ovenfor', validators=[DataRequired(message='Du må bekrefte erklæringen for å registrere deg.')])
     submit = SubmitField('Registrer deg')
 
 

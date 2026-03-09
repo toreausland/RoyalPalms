@@ -16,6 +16,7 @@ def seed():
                 apartment='Tiger Palm A1',
                 phase='Fase 1',
                 is_admin=True,
+                is_approved=True,
             )
             admin.set_password('RoyalPalms2026!')
             db.session.add(admin)

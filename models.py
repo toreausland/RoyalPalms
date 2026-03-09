@@ -15,6 +15,7 @@ class User(UserMixin, db.Model):
     phase = db.Column(db.String(20), nullable=False, default='Fase 1')
     phone = db.Column(db.String(30), nullable=True)
     is_admin = db.Column(db.Boolean, default=False)
+    is_approved = db.Column(db.Boolean, default=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     comments = db.relationship('Comment', backref='author', lazy='dynamic')

@@ -32,6 +32,52 @@
     </div>
 </div>
 
+<!-- Ventende godkjenninger -->
+{% if pending_approvals %}
+<div class="alert alert-warning shadow-sm mb-4">
+    <h5 class="alert-heading"><i class="bi bi-person-exclamation me-2"></i>Ventende godkjenninger ({{ pending_approvals|length }})</h5>
+    <p class="mb-3">Følgende brukere har registrert seg og venter på godkjenning:</p>
+    <div class="table-responsive">
+        <table class="table table-sm mb-0">
+            <thead>
+                <tr>
+                    <th>Navn</th>
+                    <th>E-post</th>
+                    <th>Leilighet</th>
+                    <th>Fase</th>
+                    <th>Registrert</th>
+                    <th class="text-end">Handling</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in pending_approvals %}
+                <tr>
+                    <td><strong>{{ user.name }}</strong></td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.apartment or '—' }}</td>
+                    <td><span class="badge bg-royal">{{ user.phase }}</span></td>
+                    <td>{{ user.created_at.strftime('%d.%m.%Y %H:%M') }}</td>
+                    <td class="text-end">
+                        <form method="POST" action="{{ url_for('admin.approve_member', user_id=user.id) }}" class="d-inline">
+                            <button type="submit" class="btn btn-sm btn-success" title="Godkjenn">
+                                <i class="bi bi-check-lg me-1"></i>Godkjenn
+                            </button>
+                        </form>
+                        <form method="POST" action="{{ url_for('admin.reject_member', user_id=user.id) }}" class="d-inline ms-1"
+                              onsubmit="return confirm('Er du sikker på at du vil avvise {{ user.name }}? Kontoen slettes permanent.')">
+                            <button type="submit" class="btn btn-sm btn-outline-danger" title="Avvis">
+                                <i class="bi bi-x-lg me-1"></i>Avvis
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endif %}
+
 <!-- Hurtigtilgang -->
 <div class="row g-3 mb-4">
     <div class="col-md-3">

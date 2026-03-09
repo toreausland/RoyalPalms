@@ -26,6 +26,9 @@ def panel():
     total_members = User.query.count()
     total_topics = Topic.query.count()
     total_documents = Document.query.count()
+    pending_approvals = User.query.filter_by(is_approved=False).filter(
+        User.password_hash.isnot(None)
+    ).all()
     topics = Topic.query.order_by(Topic.sort_order.asc()).all()
     recent_activity = ActivityLog.query.order_by(
         ActivityLog.created_at.desc()
@@ -35,6 +38,7 @@ def panel():
         total_members=total_members,
         total_topics=total_topics,
         total_documents=total_documents,
+        pending_approvals=pending_approvals,
         topics=topics,
         recent_activity=recent_activity,
     )
@@ -135,6 +139,49 @@ def delete_member(user_id):
 
     flash(f'{name} er fjernet fra kjøpergruppen.', 'info')
     return redirect(url_for('admin.members'))
+
+
+@admin_bp.route('/medlem/<int:user_id>/godkjenn', methods=['POST'])
+@login_required
+@admin_required
+def approve_member(user_id):
+    user = User.query.get_or_404(user_id)
+    user.is_approved = True
+
+    log = ActivityLog(
+        action='godkjenn_medlem',
+        description=f'{current_user.name} godkjente registreringen til {user.name}',
+        user_id=current_user.id,
+    )
+    db.session.add(log)
+    db.session.commit()
+
+    flash(f'{user.name} er godkjent og kan nå logge inn.', 'success')
+    return redirect(url_for('admin.panel'))
+
+
+@admin_bp.route('/medlem/<int:user_id>/avvis', methods=['POST'])
+@login_required
+@admin_required
+def reject_member(user_id):
+    user = User.query.get_or_404(user_id)
+    name = user.name
+
+    # Slett bruker og relaterte data
+    Comment.query.filter_by(user_id=user.id).delete()
+    ActivityLog.query.filter_by(user_id=user.id).delete()
+    db.session.delete(user)
+
+    log = ActivityLog(
+        action='avvis_medlem',
+        description=f'{current_user.name} avslo registreringen til {name}',
+        user_id=current_user.id,
+    )
+    db.session.add(log)
+    db.session.commit()
+
+    flash(f'Registreringen til {name} er avvist og kontoen fjernet.', 'info')
+    return redirect(url_for('admin.panel'))
 
 
 @admin_bp.route('/tema/nytt', methods=['GET', 'POST'])

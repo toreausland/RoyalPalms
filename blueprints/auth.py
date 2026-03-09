@@ -22,21 +22,23 @@ def register():
             return render_template('auth/register.html', form=form)
 
         if existing and not existing.has_registered:
-            # Pre-opprettet bruker fra Excel-listen — fullfør registreringen
+            # Pre-opprettet bruker fra invitasjonslisten — fullfør registreringen
             existing.name = form.name.data.strip()
             existing.apartment = form.apartment.data.strip()
             existing.phase = form.phase.data
             existing.phone = form.phone.data.strip() if form.phone.data else None
             existing.set_password(form.password.data)
+            existing.is_approved = True  # Inviterte brukere godkjennes automatisk
             user = existing
         else:
-            # Helt ny bruker (ikke på listen)
+            # Helt ny bruker (ikke på listen) — må godkjennes av admin
             user = User(
                 name=form.name.data.strip(),
                 email=email,
                 apartment=form.apartment.data.strip(),
                 phase=form.phase.data,
                 phone=form.phone.data.strip() if form.phone.data else None,
+                is_approved=False,
             )
             user.set_password(form.password.data)
             db.session.add(user)
@@ -49,7 +51,14 @@ def register():
         db.session.add(log)
         db.session.commit()
 
-        flash('Registreringen var vellykket! Du kan nå logge inn.', 'success')
+        if user.is_approved:
+            flash('Registreringen var vellykket! Du kan nå logge inn.', 'success')
+        else:
+            flash(
+                'Registreringen er mottatt! En administrator må godkjenne kontoen din '
+                'før du kan logge inn. Du vil få tilgang så snart dette er gjort.',
+                'info',
+            )
         return redirect(url_for('auth.login'))
 
     return render_template('auth/register.html', form=form)
@@ -70,6 +79,14 @@ def login():
             return render_template('auth/login.html', form=form)
 
         if user and user.check_password(form.password.data):
+            if not user.is_approved:
+                flash(
+                    'Kontoen din venter på godkjenning fra en administrator. '
+                    'Du vil få tilgang så snart registreringen er godkjent.',
+                    'warning',
+                )
+                return render_template('auth/login.html', form=form)
+
             login_user(user)
             next_page = request.args.get('next')
             flash(f'Velkommen, {user.name}!', 'success')

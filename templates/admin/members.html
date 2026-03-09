@@ -40,10 +40,12 @@
                     <td><span class="badge bg-royal">{{ user.phase }}</span></td>
                     <td>{{ user.phone or '—' }}</td>
                     <td>
-                        {% if user.has_registered %}
+                        {% if user.has_registered and user.is_approved %}
                         <span class="badge bg-success"><i class="bi bi-check-circle me-1"></i>Aktiv</span>
+                        {% elif user.has_registered and not user.is_approved %}
+                        <span class="badge bg-danger"><i class="bi bi-hourglass-split me-1"></i>Venter godkjenning</span>
                         {% else %}
-                        <span class="badge bg-warning text-dark"><i class="bi bi-clock me-1"></i>Venter</span>
+                        <span class="badge bg-warning text-dark"><i class="bi bi-clock me-1"></i>Ikke registrert</span>
                         {% endif %}
                     </td>
                     <td>

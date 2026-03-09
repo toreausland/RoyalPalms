@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+{% block title %}Rediger medlem — Royal Palms{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-7">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="text-royal">
+                <i class="bi bi-person-gear me-2"></i>Rediger medlem
+            </h2>
+            <a href="{{ url_for('admin.members') }}" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left me-1"></i>Tilbake
+            </a>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-8">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-royal text-white">
+                        <h5 class="mb-0">Profilinformasjon</h5>
+                    </div>
+                    <div class="card-body p-4">
+                        <form method="POST" novalidate>
+                            {{ form.hidden_tag() }}
+                            <div class="mb-3">
+                                {{ form.name.label(class="form-label") }}
+                                {{ form.name(class="form-control" + (" is-invalid" if form.name.errors else "")) }}
+                                {% for error in form.name.errors %}
+                                <div class="invalid-feedback">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                            <div class="mb-3">
+                                {{ form.email.label(class="form-label") }}
+                                {{ form.email(class="form-control" + (" is-invalid" if form.email.errors else "")) }}
+                                {% for error in form.email.errors %}
+                                <div class="invalid-feedback">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                            <div class="row">
+                                <div class="col-md-7 mb-3">
+                                    {{ form.apartment.label(class="form-label") }}
+                                    {{ form.apartment(class="form-control" + (" is-invalid" if form.apartment.errors else ""), placeholder="F.eks. Tiger Palm A1") }}
+                                    {% for error in form.apartment.errors %}
+                                    <div class="invalid-feedback">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                                <div class="col-md-5 mb-3">
+                                    {{ form.phase.label(class="form-label") }}
+                                    {{ form.phase(class="form-select" + (" is-invalid" if form.phase.errors else "")) }}
+                                    {% for error in form.phase.errors %}
+                                    <div class="invalid-feedback">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                {{ form.phone.label(class="form-label") }}
+                                {{ form.phone(class="form-control" + (" is-invalid" if form.phone.errors else ""), placeholder="+47 ...") }}
+                                {% for error in form.phone.errors %}
+                                <div class="invalid-feedback">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+
+                            <hr>
+
+                            <div class="mb-3">
+                                <div class="form-check form-switch">
+                                    {{ form.is_admin(class="form-check-input") }}
+                                    {{ form.is_admin.label(class="form-check-label") }}
+                                </div>
+                                <div class="form-text">Gir tilgang til admin-panelet.</div>
+                            </div>
+
+                            <hr>
+
+                            <div class="mb-3">
+                                {{ form.reset_password.label(class="form-label") }}
+                                {{ form.reset_password(class="form-control" + (" is-invalid" if form.reset_password.errors else ""), placeholder="Min. 8 tegn") }}
+                                {% for error in form.reset_password.errors %}
+                                <div class="invalid-feedback">{{ error }}</div>
+                                {% endfor %}
+                                <div class="form-text">La feltet stå tomt for å beholde eksisterende passord.</div>
+                            </div>
+
+                            <div class="d-flex gap-2">
+                                {{ form.submit(class="btn btn-royal") }}
+                                <a href="{{ url_for('admin.members') }}" class="btn btn-outline-secondary">Avbryt</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Brukerinfo-kort -->
+            <div class="col-md-4">
+                <div class="card shadow-sm">
+                    <div class="card-body text-center">
+                        <i class="bi bi-person-circle display-4 text-royal"></i>
+                        <h5 class="mt-2">{{ member.name }}</h5>
+                        <p class="text-muted mb-1">{{ member.email }}</p>
+                        {% if member.apartment %}
+                        <p class="text-muted mb-1">{{ member.apartment }}</p>
+                        {% endif %}
+                        <span class="badge bg-royal">{{ member.phase }}</span>
+                        {% if member.is_admin %}
+                        <span class="badge bg-gold">Admin</span>
+                        {% endif %}
+
+                        <hr>
+
+                        <div class="text-start small">
+                            <p class="mb-1">
+                                <strong>Status:</strong>
+                                {% if member.has_registered %}
+                                <span class="text-success"><i class="bi bi-check-circle me-1"></i>Registrert</span>
+                                {% else %}
+                                <span class="text-warning"><i class="bi bi-clock me-1"></i>Venter på registrering</span>
+                                {% endif %}
+                            </p>
+                            <p class="mb-1">
+                                <strong>Medlem siden:</strong> {{ member.created_at.strftime('%d.%m.%Y') }}
+                            </p>
+                            <p class="mb-0">
+                                <strong>Kommentarer:</strong> {{ member.comments.count() }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                {% if member.id != current_user.id %}
+                <div class="card shadow-sm mt-3 border-danger">
+                    <div class="card-body text-center">
+                        <p class="small text-muted mb-2">Fjern bruker permanent</p>
+                        <form method="POST" action="{{ url_for('admin.delete_member', user_id=member.id) }}"
+                              onsubmit="return confirm('Er du sikker på at du vil slette {{ member.name }}? Dette kan ikke angres.')">
+                            <button type="submit" class="btn btn-sm btn-outline-danger">
+                                <i class="bi bi-trash me-1"></i>Slett bruker
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

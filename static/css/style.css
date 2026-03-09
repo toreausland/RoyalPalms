@@ -1,0 +1,270 @@
+/* Royal Palms Kjøpergruppe — Custom Theme */
+:root {
+    --royal-blue: #1A3A5C;
+    --royal-blue-light: #2A5A8C;
+    --royal-blue-dark: #0F2840;
+    --gold: #C49000;
+    --gold-light: #E8B400;
+    --success-green: #2A7A2A;
+    --danger-red: #B22222;
+}
+
+/* Typography */
+body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background-color: #f5f7fa;
+    color: #333;
+}
+
+/* Navbar */
+.bg-royal {
+    background-color: var(--royal-blue) !important;
+}
+
+.navbar-dark .navbar-nav .nav-link {
+    color: rgba(255, 255, 255, 0.85);
+    transition: color 0.2s;
+}
+
+.navbar-dark .navbar-nav .nav-link:hover {
+    color: var(--gold-light);
+}
+
+.navbar-brand {
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+/* Royal Buttons */
+.btn-royal {
+    background-color: var(--royal-blue);
+    border-color: var(--royal-blue);
+    color: white;
+}
+
+.btn-royal:hover {
+    background-color: var(--royal-blue-light);
+    border-color: var(--royal-blue-light);
+    color: white;
+}
+
+.btn-outline-royal {
+    color: var(--royal-blue);
+    border-color: var(--royal-blue);
+}
+
+.btn-outline-royal:hover {
+    background-color: var(--royal-blue);
+    border-color: var(--royal-blue);
+    color: white;
+}
+
+/* Text Colors */
+.text-royal {
+    color: var(--royal-blue) !important;
+}
+
+.text-gold {
+    color: var(--gold) !important;
+}
+
+/* Badge Colors */
+.bg-royal {
+    background-color: var(--royal-blue) !important;
+}
+
+.bg-gold {
+    background-color: var(--gold) !important;
+    color: white;
+}
+
+/* Cards */
+.card {
+    border: none;
+    border-radius: 10px;
+    transition: transform 0.15s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-3px);
+}
+
+.topic-card:hover {
+    box-shadow: 0 4px 15px rgba(26, 58, 92, 0.15);
+}
+
+.comment-card {
+    border-left: 3px solid var(--royal-blue) !important;
+    border-radius: 0 10px 10px 0;
+}
+
+.card-header.bg-royal {
+    border-radius: 10px 10px 0 0 !important;
+}
+
+/* Landing Page */
+.landing-page {
+    background: linear-gradient(135deg, #f5f7fa 0%, #e4e9f0 100%);
+    min-height: 100vh;
+    margin: -1.5rem -0.75rem;
+    padding: 0 0.75rem;
+}
+
+.landing-card {
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(26, 58, 92, 0.12);
+}
+
+/* Tables */
+.table th {
+    font-weight: 600;
+    color: var(--royal-blue);
+    border-bottom-width: 2px;
+}
+
+.table-hover tbody tr:hover {
+    background-color: rgba(26, 58, 92, 0.04);
+}
+
+/* Alerts */
+.alert {
+    border-radius: 10px;
+    border: none;
+}
+
+/* Footer */
+.footer {
+    border-top: 2px solid var(--royal-blue);
+}
+
+/* Links */
+a {
+    color: var(--royal-blue);
+}
+
+a:hover {
+    color: var(--royal-blue-light);
+}
+
+/* Breadcrumbs */
+.breadcrumb-item a {
+    text-decoration: none;
+}
+
+/* Forms */
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--royal-blue-light);
+    box-shadow: 0 0 0 0.2rem rgba(26, 58, 92, 0.2);
+}
+
+/* Status badges */
+.badge.bg-primary {
+    background-color: var(--royal-blue) !important;
+}
+
+.badge.bg-warning {
+    background-color: var(--gold) !important;
+    color: white !important;
+}
+
+.badge.bg-success {
+    background-color: var(--success-green) !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .display-4 {
+        font-size: 2rem;
+    }
+
+    .display-5 {
+        font-size: 1.8rem;
+    }
+
+    .stat-card .display-4 {
+        font-size: 1.5rem;
+    }
+
+    .landing-card {
+        padding: 2rem !important;
+    }
+
+    .table-responsive {
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .btn-lg {
+        font-size: 1rem;
+        padding: 0.5rem 1rem;
+    }
+
+    .card-body {
+        padding: 1rem;
+    }
+}
+
+/* List groups inside cards */
+.list-group-item {
+    border-color: rgba(0, 0, 0, 0.06);
+}
+
+.list-group-item-action:hover {
+    background-color: rgba(26, 58, 92, 0.04);
+}
+
+/* Dropdown menu */
+.dropdown-menu {
+    border: none;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+
+.dropdown-item:hover {
+    background-color: rgba(26, 58, 92, 0.06);
+}
+
+/* Drag & Drop Upload Zone */
+.drop-zone {
+    border: 2px dashed var(--royal-blue-light);
+    border-radius: 12px;
+    padding: 2.5rem 1rem;
+    text-align: center;
+    transition: all 0.25s ease;
+    background: #f8f9fa;
+    cursor: pointer;
+}
+
+.drop-zone:hover {
+    border-color: var(--royal-blue);
+    background: rgba(26, 58, 92, 0.04);
+}
+
+.drop-zone-active {
+    border-color: var(--gold) !important;
+    background: rgba(196, 144, 0, 0.06) !important;
+    transform: scale(1.01);
+}
+
+.drop-zone-has-file {
+    border-style: solid;
+    border-color: var(--success-green);
+    background: rgba(42, 122, 42, 0.04);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--royal-blue-light);
+    border-radius: 4px;
+}

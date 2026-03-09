@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+{% block title %}Admin — Royal Palms{% endblock %}
+
+{% block content %}
+<h2 class="text-royal mb-4"><i class="bi bi-gear me-2"></i>Administrasjon</h2>
+
+<!-- Statistikk -->
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm text-center">
+            <div class="card-body">
+                <h3 class="text-royal">{{ total_members }}</h3>
+                <p class="text-muted mb-0">Medlemmer</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm text-center">
+            <div class="card-body">
+                <h3 class="text-gold">{{ total_topics }}</h3>
+                <p class="text-muted mb-0">Temaer</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm text-center">
+            <div class="card-body">
+                <h3 class="text-success">{{ total_documents }}</h3>
+                <p class="text-muted mb-0">Dokumenter</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Hurtigtilgang -->
+<div class="row g-3 mb-4">
+    <div class="col-md-3">
+        <a href="{{ url_for('admin.members') }}" class="btn btn-outline-royal w-100 py-3">
+            <i class="bi bi-people d-block display-6 mb-1"></i>Medlemsliste
+        </a>
+    </div>
+    <div class="col-md-3">
+        <a href="{{ url_for('admin.export_members') }}" class="btn btn-outline-royal w-100 py-3">
+            <i class="bi bi-download d-block display-6 mb-1"></i>Eksporter CSV
+        </a>
+    </div>
+    <div class="col-md-3">
+        <a href="{{ url_for('admin.create_topic') }}" class="btn btn-outline-royal w-100 py-3">
+            <i class="bi bi-plus-circle d-block display-6 mb-1"></i>Nytt tema
+        </a>
+    </div>
+    <div class="col-md-3">
+        <a href="{{ url_for('documents.upload') }}" class="btn btn-outline-royal w-100 py-3">
+            <i class="bi bi-cloud-upload d-block display-6 mb-1"></i>Last opp dokument
+        </a>
+    </div>
+</div>
+
+<!-- Temaer med redigeringsmuligheter -->
+<div class="card shadow-sm mb-4">
+    <div class="card-header bg-royal text-white">
+        <h5 class="mb-0"><i class="bi bi-list-check me-2"></i>Alle temaer</h5>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-hover mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th>#</th>
+                    <th>Tittel</th>
+                    <th>Status</th>
+                    <th>Kommentarer</th>
+                    <th>Handlinger</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for topic in topics %}
+                <tr>
+                    <td>{{ topic.sort_order }}</td>
+                    <td>
+                        <a href="{{ url_for('topics.detail', topic_id=topic.id) }}" class="text-decoration-none">
+                            {{ topic.title[:60] }}{% if topic.title|length > 60 %}...{% endif %}
+                        </a>
+                    </td>
+                    <td><span class="badge bg-{{ topic.status_color }}">{{ topic.status_label }}</span></td>
+                    <td>{{ topic.comment_count }}</td>
+                    <td>
+                        <a href="{{ url_for('admin.edit_topic', topic_id=topic.id) }}" class="btn btn-sm btn-outline-primary me-1">
+                            <i class="bi bi-pencil"></i>
+                        </a>
+                        <form method="POST" action="{{ url_for('admin.delete_topic', topic_id=topic.id) }}" class="d-inline"
+                              onsubmit="return confirm('Er du sikker på at du vil slette dette temaet?')">
+                            <button type="submit" class="btn btn-sm btn-outline-danger">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Siste aktivitet -->
+<div class="card shadow-sm">
+    <div class="card-header bg-royal text-white">
+        <h5 class="mb-0"><i class="bi bi-clock-history me-2"></i>Siste aktivitet</h5>
+    </div>
+    <div class="list-group list-group-flush">
+        {% for log in recent_activity %}
+        <div class="list-group-item">
+            <div class="d-flex justify-content-between">
+                <div>
+                    <span class="badge bg-secondary me-2">{{ log.action }}</span>
+                    {{ log.description }}
+                </div>
+                <small class="text-muted">{{ log.created_at.strftime('%d.%m.%Y %H:%M') }}</small>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

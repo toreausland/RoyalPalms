@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+{% block title %}Min profil — Royal Palms{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <h2 class="text-royal mb-4"><i class="bi bi-person me-2"></i>Min profil</h2>
+
+        <div class="row g-4">
+            <!-- Profilinfo -->
+            <div class="col-md-7">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-royal text-white">
+                        <h5 class="mb-0">Personlig informasjon</h5>
+                    </div>
+                    <div class="card-body p-4">
+                        <form method="POST" action="{{ url_for('profile.edit') }}" novalidate>
+                            {{ form.hidden_tag() }}
+                            <div class="mb-3">
+                                {{ form.name.label(class="form-label") }}
+                                {{ form.name(class="form-control" + (" is-invalid" if form.name.errors else "")) }}
+                                {% for error in form.name.errors %}
+                                <div class="invalid-feedback">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">E-post</label>
+                                <input type="email" class="form-control" value="{{ current_user.email }}" disabled>
+                                <div class="form-text">E-postadressen kan ikke endres.</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-7 mb-3">
+                                    {{ form.apartment.label(class="form-label") }}
+                                    {{ form.apartment(class="form-control" + (" is-invalid" if form.apartment.errors else "")) }}
+                                    {% for error in form.apartment.errors %}
+                                    <div class="invalid-feedback">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                                <div class="col-md-5 mb-3">
+                                    {{ form.phase.label(class="form-label") }}
+                                    {{ form.phase(class="form-select" + (" is-invalid" if form.phase.errors else "")) }}
+                                    {% for error in form.phase.errors %}
+                                    <div class="invalid-feedback">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                {{ form.phone.label(class="form-label") }}
+                                {{ form.phone(class="form-control" + (" is-invalid" if form.phone.errors else "")) }}
+                                {% for error in form.phone.errors %}
+                                <div class="invalid-feedback">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                            {{ form.submit(class="btn btn-royal") }}
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Endre passord -->
+            <div class="col-md-5">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-royal text-white">
+                        <h5 class="mb-0">Endre passord</h5>
+                    </div>
+                    <div class="card-body p-4">
+                        <form method="POST" action="{{ url_for('profile.change_password') }}" novalidate>
+                            {{ pw_form.hidden_tag() }}
+                            <div class="mb-3">
+                                {{ pw_form.current_password.label(class="form-label") }}
+                                {{ pw_form.current_password(class="form-control") }}
+                            </div>
+                            <div class="mb-3">
+                                {{ pw_form.new_password.label(class="form-label") }}
+                                {{ pw_form.new_password(class="form-control") }}
+                            </div>
+                            <div class="mb-3">
+                                {{ pw_form.new_password2.label(class="form-label") }}
+                                {{ pw_form.new_password2(class="form-control") }}
+                            </div>
+                            {{ pw_form.submit(class="btn btn-outline-royal") }}
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Info -->
+                <div class="card shadow-sm mt-3">
+                    <div class="card-body text-center">
+                        <p class="mb-1"><strong>{{ current_user.name }}</strong></p>
+                        <p class="text-muted mb-1">{{ current_user.apartment }}</p>
+                        <span class="badge bg-royal">{{ current_user.phase }}</span>
+                        <p class="text-muted mt-2 mb-0">
+                            <small>Medlem siden {{ current_user.created_at.strftime('%d.%m.%Y') }}</small>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

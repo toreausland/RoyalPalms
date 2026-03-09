@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block title %}Registrering — Royal Palms{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center mt-4">
+    <div class="col-md-6 col-lg-5">
+        <div class="card shadow-sm">
+            <div class="card-body p-4">
+                <div class="text-center mb-4">
+                    <i class="bi bi-person-plus display-4 text-royal"></i>
+                    <h3 class="mt-2 text-royal">Registrer deg</h3>
+                    <p class="text-muted">Bli med i kjøpergruppen</p>
+                </div>
+                <form method="POST" novalidate>
+                    {{ form.hidden_tag() }}
+                    <div class="mb-3">
+                        {{ form.name.label(class="form-label") }}
+                        {{ form.name(class="form-control" + (" is-invalid" if form.name.errors else ""), placeholder="Fornavn Etternavn") }}
+                        {% for error in form.name.errors %}
+                        <div class="invalid-feedback">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.email.label(class="form-label") }}
+                        {{ form.email(class="form-control" + (" is-invalid" if form.email.errors else ""), placeholder="din@epost.no") }}
+                        {% for error in form.email.errors %}
+                        <div class="invalid-feedback">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            {{ form.password.label(class="form-label") }}
+                            {{ form.password(class="form-control" + (" is-invalid" if form.password.errors else "")) }}
+                            {% for error in form.password.errors %}
+                            <div class="invalid-feedback">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            {{ form.password2.label(class="form-label") }}
+                            {{ form.password2(class="form-control" + (" is-invalid" if form.password2.errors else "")) }}
+                            {% for error in form.password2.errors %}
+                            <div class="invalid-feedback">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-7 mb-3">
+                            {{ form.apartment.label(class="form-label") }}
+                            {{ form.apartment(class="form-control" + (" is-invalid" if form.apartment.errors else ""), placeholder="F.eks. Tiger Palm A1") }}
+                            {% for error in form.apartment.errors %}
+                            <div class="invalid-feedback">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                        <div class="col-md-5 mb-3">
+                            {{ form.phase.label(class="form-label") }}
+                            {{ form.phase(class="form-select" + (" is-invalid" if form.phase.errors else "")) }}
+                            {% for error in form.phase.errors %}
+                            <div class="invalid-feedback">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        {{ form.phone.label(class="form-label") }}
+                        {{ form.phone(class="form-control" + (" is-invalid" if form.phone.errors else ""), placeholder="+47 ...") }}
+                        {% for error in form.phone.errors %}
+                        <div class="invalid-feedback">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                    <div class="d-grid">
+                        {{ form.submit(class="btn btn-royal btn-lg") }}
+                    </div>
+                </form>
+                <div class="text-center mt-3">
+                    <small>Allerede registrert? <a href="{{ url_for('auth.login') }}">Logg inn</a></small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

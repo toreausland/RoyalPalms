@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Logg inn — Royal Palms{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center mt-5">
+    <div class="col-md-5 col-lg-4">
+        <div class="card shadow-sm">
+            <div class="card-body p-4">
+                <div class="text-center mb-4">
+                    <i class="bi bi-building display-4 text-royal"></i>
+                    <h3 class="mt-2 text-royal">Logg inn</h3>
+                </div>
+                <form method="POST" novalidate>
+                    {{ form.hidden_tag() }}
+                    <div class="mb-3">
+                        {{ form.email.label(class="form-label") }}
+                        {{ form.email(class="form-control" + (" is-invalid" if form.email.errors else ""), placeholder="din@epost.no") }}
+                        {% for error in form.email.errors %}
+                        <div class="invalid-feedback">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.password.label(class="form-label") }}
+                        {{ form.password(class="form-control" + (" is-invalid" if form.password.errors else "")) }}
+                        {% for error in form.password.errors %}
+                        <div class="invalid-feedback">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                    <div class="d-grid">
+                        {{ form.submit(class="btn btn-royal btn-lg") }}
+                    </div>
+                </form>
+                <div class="text-center mt-3">
+                    <small>Ikke registrert? <a href="{{ url_for('auth.register') }}">Opprett konto</a></small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

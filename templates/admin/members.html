@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block title %}Medlemmer — Royal Palms{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="text-royal"><i class="bi bi-people me-2"></i>Medlemsliste</h2>
+    <div>
+        <a href="{{ url_for('admin.export_members') }}" class="btn btn-outline-royal">
+            <i class="bi bi-download me-1"></i>Eksporter CSV
+        </a>
+        <a href="{{ url_for('admin.panel') }}" class="btn btn-outline-secondary ms-2">
+            <i class="bi bi-arrow-left me-1"></i>Tilbake
+        </a>
+    </div>
+</div>
+
+<div class="card shadow-sm">
+    <div class="table-responsive">
+        <table class="table table-hover mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th>Navn</th>
+                    <th>E-post</th>
+                    <th>Leilighet</th>
+                    <th>Fase</th>
+                    <th>Telefon</th>
+                    <th>Status</th>
+                    <th>Rolle</th>
+                    <th class="text-end">Handlinger</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr class="{{ 'table-light text-muted' if not user.has_registered else '' }}">
+                    <td>
+                        <strong>{{ user.name }}</strong>
+                    </td>
+                    <td><a href="mailto:{{ user.email }}">{{ user.email }}</a></td>
+                    <td>{{ user.apartment or '—' }}</td>
+                    <td><span class="badge bg-royal">{{ user.phase }}</span></td>
+                    <td>{{ user.phone or '—' }}</td>
+                    <td>
+                        {% if user.has_registered %}
+                        <span class="badge bg-success"><i class="bi bi-check-circle me-1"></i>Aktiv</span>
+                        {% else %}
+                        <span class="badge bg-warning text-dark"><i class="bi bi-clock me-1"></i>Venter</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if user.is_admin %}
+                        <span class="badge bg-gold">Admin</span>
+                        {% else %}
+                        <span class="badge bg-secondary">Medlem</span>
+                        {% endif %}
+                    </td>
+                    <td class="text-end">
+                        <a href="{{ url_for('admin.edit_member', user_id=user.id) }}" class="btn btn-sm btn-outline-primary" title="Rediger">
+                            <i class="bi bi-pencil"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="d-flex justify-content-between mt-2">
+    <small class="text-muted">
+        Totalt {{ users|length }} medlemmer
+        ({{ users|selectattr('has_registered')|list|length }} aktive,
+        {{ users|rejectattr('has_registered')|list|length }} venter på registrering).
+    </small>
+</div>
+{% endblock %}

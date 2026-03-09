@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% block title %}Temaer — Royal Palms{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="text-royal"><i class="bi bi-chat-left-text me-2"></i>Temaer</h2>
+    {% if current_user.is_admin %}
+    <a href="{{ url_for('admin.create_topic') }}" class="btn btn-royal">
+        <i class="bi bi-plus-lg me-1"></i>Nytt tema
+    </a>
+    {% endif %}
+</div>
+
+<!-- Aktive temaer -->
+<div class="row g-3 mb-4">
+    {% for topic in active_topics %}
+    <div class="col-12">
+        <div class="card shadow-sm topic-card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <h5 class="card-title mb-1">
+                            <a href="{{ url_for('topics.detail', topic_id=topic.id) }}" class="text-decoration-none text-royal">
+                                {{ topic.title }}
+                            </a>
+                        </h5>
+                        <p class="card-text text-muted mb-2">{{ topic.description[:200] }}{% if topic.description|length > 200 %}...{% endif %}</p>
+                        <div class="d-flex gap-3 align-items-center">
+                            <span class="badge bg-{{ topic.status_color }}">{{ topic.status_label }}</span>
+                            <small class="text-muted">
+                                <i class="bi bi-chat me-1"></i>{{ topic.comment_count }} kommentar{{ 'er' if topic.comment_count != 1 else '' }}
+                            </small>
+                            <small class="text-muted">
+                                <i class="bi bi-calendar me-1"></i>{{ topic.created_at.strftime('%d.%m.%Y') }}
+                            </small>
+                        </div>
+                    </div>
+                    <a href="{{ url_for('topics.detail', topic_id=topic.id) }}" class="btn btn-sm btn-outline-royal ms-3">
+                        <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    {% if not active_topics %}
+    <div class="col-12 text-center text-muted py-4">
+        <p>Ingen aktive temaer.</p>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Arkiverte temaer -->
+{% if archived_topics %}
+<div class="mt-4">
+    <div class="d-flex align-items-center mb-3">
+        <h5 class="text-muted mb-0">
+            <a class="text-decoration-none text-muted" data-bs-toggle="collapse" href="#arkiverteTemaer" role="button" aria-expanded="false">
+                <i class="bi bi-archive me-2"></i>Arkiverte temaer ({{ archived_topics|length }})
+                <i class="bi bi-chevron-down ms-1 small"></i>
+            </a>
+        </h5>
+    </div>
+    <div class="collapse" id="arkiverteTemaer">
+        <div class="row g-2">
+            {% for topic in archived_topics %}
+            <div class="col-12">
+                <div class="card shadow-sm border-0 bg-light">
+                    <div class="card-body py-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="mb-1">
+                                    <a href="{{ url_for('topics.detail', topic_id=topic.id) }}" class="text-decoration-none text-muted">
+                                        {{ topic.title }}
+                                    </a>
+                                </h6>
+                                <div class="d-flex gap-3 align-items-center">
+                                    <span class="badge bg-dark">Arkivert</span>
+                                    <small class="text-muted">
+                                        <i class="bi bi-chat me-1"></i>{{ topic.comment_count }}
+                                    </small>
+                                </div>
+                            </div>
+                            <a href="{{ url_for('topics.detail', topic_id=topic.id) }}" class="btn btn-sm btn-outline-secondary">
+                                <i class="bi bi-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

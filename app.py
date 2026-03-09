@@ -20,8 +20,11 @@ def create_app(config_name=None):
     }
     app.config.from_object(configs.get(config_name, configs['development']))
 
-    os.makedirs(app.config.get('UPLOAD_FOLDER', 'uploads'), exist_ok=True)
-    os.makedirs(os.path.join(app.root_path, 'instance'), exist_ok=True)
+    try:
+        os.makedirs(app.config.get('UPLOAD_FOLDER', 'uploads'), exist_ok=True)
+        os.makedirs(os.path.join(app.root_path, 'instance'), exist_ok=True)
+    except OSError:
+        pass  # Under Render build er /var/data read-only — opprettes ved runtime
 
     db.init_app(app)
     csrf.init_app(app)

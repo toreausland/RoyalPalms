@@ -7,11 +7,5 @@ pip install -r requirements.txt
 # Opprett mapper (lokalt fallback)
 mkdir -p instance uploads
 
-# Persistent disk (Render produksjon)
-if [ -d "/var/data" ]; then
-    mkdir -p /var/data/uploads
-    echo "Persistent disk klar: /var/data"
-fi
-
-# Seed databasen (kun første gang / hvis tom)
-python seed.py
+# NB: seed.py kjøres i startCommand (runtime), IKKE her.
+# Persistent disk (/var/data) er read-only under build-fasen på Render.

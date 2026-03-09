@@ -3,7 +3,7 @@ services:
     name: royalpalms-kjopergruppe
     runtime: python
     buildCommand: "./build.sh"
-    startCommand: "gunicorn app:app"
+    startCommand: "python seed.py && gunicorn app:app"
     region: frankfurt
     disk:
       name: royal-palms-data
